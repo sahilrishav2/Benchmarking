@@ -1,0 +1,42 @@
+#For downloading the bacterial sequences:
+
+ncbi-genome-download -T 110321  bacteria -F fasta,assembly-report -s genbank -p 20
+
+#To generate synthetic metagenome reads through Insilicoseq tool:
+
+#10 strains
+
+#10X
+iss generate --draft *.fna --model novaseq --output synthetic_reads --cpus 20 --n_reads 3.6M
+#50X
+iss generate --draft *.fna --model novaseq --output synthetic_reads --cpus 20 --n_reads 18M
+#100X
+iss generate --draft *.fna --model novaseq --output synthetic_reads --cpus 20 --n_reads 36M
+
+
+#100 strains
+
+#10X
+iss generate --draft *.fna --model novaseq --output synthetic_reads --cpus 20 --n_reads 36.5M
+#50X
+iss generate --draft *.fna --model novaseq --output synthetic_reads --cpus 20 --n_reads 182.5M
+#100X
+iss generate --draft *.fna --model novaseq --output synthetic_reads --cpus 20 --n_reads 365M
+
+#500 strains
+
+#10X
+iss generate --draft *.fna --model novaseq --output synthetic_reads --cpus 20 --n_reads 178.87M
+#50X
+iss generate --draft *.fna --model novaseq --output synthetic_reads --cpus 20 --n_reads 894.35M
+#100X
+iss generate --draft *.fna --model novaseq --output synthetic_reads --cpus 20 --n_reads 1788.7M
+
+#1355 strains
+
+#10X
+iss generate --draft *.fna --model novaseq --output synthetic_reads --cpus 20 --n_reads 486.9M
+#50X
+iss generate --draft *.fna --model novaseq --output synthetic_reads --cpus 20 --n_reads 2434.5M
+#100X
+iss generate --draft *.fna --model novaseq --output synthetic_reads --cpus 20 --n_reads 4869M
