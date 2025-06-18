@@ -1,0 +1,37 @@
+#MIDAS2 GTDB database download:
+midas2 database \
+  --download \
+  --midasdb_name gtdb \
+  --midasdb_dir my_midasdb_gtdb \
+  --species all
+
+#Metalign database download:
+git clone https://github.com/nlapier2/Metalign.git
+cd Metalign
+./setup_data.sh
+
+#PStrain database download:
+bash scripts/collect_metaphlan_datbase.sh -x mpa_vOct22_CHOCOPhlAnSGB_202403 -m 4 -d ./
+
+#StrainScan database customization:
+/usr/bin/time -v python StrainScan_build.py -i /home/user/Plant_Bacterial_Genomes/bacteria/ -o bacteria -t 20
+
+#StrainGE database customization:
+a) /usr/bin/time -v python3 prepare_strainge_db.py /home/user/StrainGE/bin/bacteria/ -o bacteria_db   
+
+b) /usr/bin/time -v bash -c 'for f in bacteria_db/*.fa.gz; do straingst kmerize -o ${f%.fa.gz}.hdf5 $f; done;'
+
+c) /usr/bin/time -v straingst kmersim --all-vs-all -t 20 -S jaccard -S subset bacteria_db/*.hdf5 > bacteria_similarities.tsv
+
+d) /usr/bin/time -v straingst cluster -i  bacteria_similarities.csv -d -C 0.99 -c 0.90 --clusters-out bacteria_clusters.tsv bacteria_db/*.hdf5 > bacteria_references_to_keep.txt
+
+e) /usr/bin/time -v straingst createdb -f bacteria_references_to_keep.txt -o bacteria_pan-genome-db.hdf5
+
+#StrainEst database customization:
+strainest mapgenomes *.fna bacterial_species_reference_genome.fna mapped.fna
+strainest map2snp reference_genome.fna mapped.fna snp.dgrp
+bowtie2-build mapped.fna mapped --threads 20
+
+#KrakenUniq database customization:
+krakenuniq-download --db DBDIR --threads 20  'genbank/bacteria/Any/species_taxid=#bacterial_species_taxonomy_id'
+krakenuniq-build --db DBDIR --kmer-len 31 --threads 20 --taxids-for-genomes --taxids-for-sequences
