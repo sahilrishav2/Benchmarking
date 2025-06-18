@@ -22,19 +22,19 @@ for i in /home/user/Plant_Bacterial_Genomes/strainest_output/files/*_R1.fastq; d
     # Measure time and memory usage
     time_output=$( { /usr/bin/time -v bash -c "
         # Step 1: Bowtie2 alignment
-        bowtie2 --very-fast --no-unal -x /home/user/Plant_Bacterial_Genomes/strainest_output/files/bacteria_mapped -1 $i -2 ${i/_R1.fastq/_R2.fastq} -S ${i%_R1.fastq}_bacteria_100X_500S_mapped.sam -p 40
+        bowtie2 --very-fast --no-unal -x /home/user/Plant_Bacterial_Genomes/strainest_output/files/bacteria_mapped -1 $i -2 ${i/_R1.fastq/_R2.fastq} -S ${i%_R1.fastq}_bacteria_100X_500S_mapped.sam -p 20
 
         # Step 2: Convert SAM to BAM
-        samtools view -b -o ${i%_R1.fastq}_bacteria_100X_500S_mapped.bam ${i%_R1.fastq}_bacteria_100X_500S_mapped.sam -@ 40
+        samtools view -b -o ${i%_R1.fastq}_bacteria_100X_500S_mapped.bam ${i%_R1.fastq}_bacteria_100X_500S_mapped.sam -@ 20
 
         # Step 3: Sort BAM file
-        samtools sort ${i%_R1.fastq}_bacteria_100X_500S_mapped.bam -o ${i%_R1.fastq}_bacteria_100X_500S_mapped.sorted.bam -@ 40
+        samtools sort ${i%_R1.fastq}_bacteria_100X_500S_mapped.bam -o ${i%_R1.fastq}_bacteria_100X_500S_mapped.sorted.bam -@ 20
 
         # Step 4: Index BAM file
-        samtools index ${i%_R1.fastq}_bacteria_100X_500S_mapped.sorted.bam -@ 40
+        samtools index ${i%_R1.fastq}_bacteria_100X_500S_mapped.sorted.bam -@ 20
 
         # Step 5: Run StrainEst
-        strainest est /home/user/Plant_Bacterial_Genomes/strainest_output/files/bacteria_snp.dgrp ${i%_R1.fastq}_bacteria_100X_500S_mapped.sorted.bam ${i%_R1.fastq}_bacteria_100X_500S_outputdir -t 40
+        strainest est /home/user/Plant_Bacterial_Genomes/strainest_output/files/bacteria_snp.dgrp ${i%_R1.fastq}_bacteria_100X_500S_mapped.sorted.bam ${i%_R1.fastq}_bacteria_100X_500S_outputdir -t 20
     "; } 2>&1 )
 
     echo "$time_output" >> $log_file
