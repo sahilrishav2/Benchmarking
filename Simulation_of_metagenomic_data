@@ -1,6 +1,6 @@
 #For downloading the bacterial sequences:
 
-ncbi-genome-download -T 110321  bacteria -F fasta,assembly-report -s genbank -p 20
+ncbi-genome-download -T #sequence_id  bacteria -F fasta,assembly-report -s genbank -p 20
 
 #To generate synthetic metagenome reads through Insilicoseq tool:
 
