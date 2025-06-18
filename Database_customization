@@ -1,4 +1,5 @@
 #MIDAS2 GTDB database download:
+conda install -c zhaoc1 -c anaconda -c bioconda -c conda-forge -c defaults midas2
 midas2 database \
   --download \
   --midasdb_name gtdb \
@@ -6,17 +7,24 @@ midas2 database \
   --species all
 
 #Metalign database download:
+conda install -c conda-forge -c bioconda Metalign
 git clone https://github.com/nlapier2/Metalign.git
 cd Metalign
 ./setup_data.sh
 
 #PStrain database download:
+git clone https://github.com/wshuai294/PStrain.git --depth 1
+cd PStrain/
+conda env create --name pstrain -f pstrain_metaphlan4_env.yml
+conda activate pstrain
 bash scripts/collect_metaphlan_datbase.sh -x mpa_vOct22_CHOCOPhlAnSGB_202403 -m 4 -d ./
 
 #StrainScan database customization:
+conda install -c bioconda strainscan
 /usr/bin/time -v python StrainScan_build.py -i /home/user/Plant_Bacterial_Genomes/bacteria/ -o bacteria -t 20
 
 #StrainGE database customization:
+conda install strainge
 a) /usr/bin/time -v python3 prepare_strainge_db.py /home/user/StrainGE/bin/bacteria/ -o bacteria_db   
 
 b) /usr/bin/time -v bash -c 'for f in bacteria_db/*.fa.gz; do straingst kmerize -o ${f%.fa.gz}.hdf5 $f; done;'
@@ -28,10 +36,15 @@ d) /usr/bin/time -v straingst cluster -i  bacteria_similarities.csv -d -C 0.99 -
 e) /usr/bin/time -v straingst createdb -f bacteria_references_to_keep.txt -o bacteria_pan-genome-db.hdf5
 
 #StrainEst database customization:
+wget https://github.com/compmetagen/strainest/archive/refs/tags/strainest-1.2.4.tar.gz
+tar -zxvf strainest-1.2.4.tar.gz
+cd strainest-1.2.4
+sudo python setup.py install
 strainest mapgenomes *.fna bacterial_species_reference_genome.fna mapped.fna
 strainest map2snp reference_genome.fna mapped.fna snp.dgrp
 bowtie2-build mapped.fna mapped --threads 20
 
 #KrakenUniq database customization:
+conda install -c bioconda krakenuniq
 krakenuniq-download --db DBDIR --threads 20  'genbank/bacteria/Any/species_taxid=#bacterial_species_taxonomy_id'
 krakenuniq-build --db DBDIR --kmer-len 31 --threads 20 --taxids-for-genomes --taxids-for-sequences
