@@ -3,7 +3,7 @@
 #!/bin/bash
 
 # Create a log file to store time and memory usage for each file
-log_file="/home/rishabh/StrainGE/bin/resource_usage_100X_500S.log"
+log_file="/home/user/StrainGE/bin/resource_usage_100X_500S.log"
 
 # Clear the log file if it exists
 > $log_file
@@ -15,7 +15,7 @@ total_elapsed_time=0
 total_max_memory=0
 
 
-for i in /home/rishabh/synthetic_data/*_R1.fastq; do
+for i in /home/user/synthetic_data/*_R1.fastq; do
     echo "Processing file: $i" >> $log_file
 
     # Measure time and memory usage
