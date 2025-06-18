@@ -1,0 +1,70 @@
+#Analysis
+
+#!/bin/bash
+
+# Create a log file to store time and memory usage for each file
+log_file="/home/user/Benchmarking/krakenuniq/resource_usage_100X_500S.log"
+
+# Clear the log file if it exists
+> $log_file
+
+# Initialize total time and memory variables
+total_user_time=0
+total_system_time=0
+total_elapsed_time=0
+total_max_memory=0
+
+
+
+for i in /home/user/Benchmarking/synthetic_reads/1355_strains/combination_500S/*_R1.fastq; do
+ echo "Processing file: $i" >> $log_file
+
+    # Measure time and memory usage
+    time_output=$( { /usr/bin/time -v bash -c "
+    
+   krakenuniq --db A.humicireducens_DBDIR --report-file ${i%_R1.fastq}_100X_REPORTFILE_1.tsv $i ${i/_R1.fastq/_R2.fastq} --paired --threads 20 > ${i%_R1.fastq}_100X_READCLASSIFICATION_1.tsv
+
+   krakenuniq --db A.radiobacter_DBDIR --report-file ${i%_R1.fastq}_100X_REPORTFILE_2.tsv $i ${i/_R1.fastq/_R2.fastq} --paired --threads 20 > ${i%_R1.fastq}_100X_READCLASSIFICATION_2.tsv
+ 
+   krakenuniq --db A.tumefaciens_DBDIR --report-file ${i%_R1.fastq}_100X_REPORTFILE_3.tsv $i ${i/_R1.fastq/_R2.fastq} --paired --threads 20 > ${i%_R1.fastq}_100X_READCLASSIFICATION_3.tsv
+ 
+   krakenuniq --db E.amylovora_DBDIR --report-file ${i%_R1.fastq}_100X_REPORTFILE_4.tsv $i ${i/_R1.fastq/_R2.fastq} --paired --threads 20 > ${i%_R1.fastq}_100X_READCLASSIFICATION_4.tsv
+ 
+   krakenuniq --db E.medicae_DBDIR --report-file ${i%_R1.fastq}_100X_REPORTFILE_5.tsv $i ${i/_R1.fastq/_R2.fastq} --paired --threads 20 > ${i%_R1.fastq}_100X_READCLASSIFICATION_5.tsv
+ 
+   krakenuniq --db E.meliloti_DBDIR --report-file ${i%_R1.fastq}_100X_REPORTFILE_6.tsv $i ${i/_R1.fastq/_R2.fastq} --paired --threads 20 > ${i%_R1.fastq}_100X_READCLASSIFICATION_6.tsv
+ 
+   krakenuniq --db P.syringae_DBDIR --report-file ${i%_R1.fastq}_100X_REPORTFILE_7.tsv $i ${i/_R1.fastq/_R2.fastq} --paired --threads 20 > ${i%_R1.fastq}_100X_READCLASSIFICATION_7.tsv
+ 
+   krakenuniq --db X.campestris_DBDIR --report-file ${i%_R1.fastq}_100X_REPORTFILE_8.tsv $i ${i/_R1.fastq/_R2.fastq} --paired --threads 20 > ${i%_R1.fastq}_100X_READCLASSIFICATION_8.tsv
+ 
+   krakenuniq --db X.fastidiosa_DBDIR --report-file ${i%_R1.fastq}_100X_REPORTFILE_9.tsv $i ${i/_R1.fastq/_R2.fastq} --paired --threads 20 > ${i%_R1.fastq}_100X_READCLASSIFICATION_9.tsv
+ 
+   krakenuniq --db X.oryzae_DBDIR --report-file ${i%_R1.fastq}_100X_REPORTFILE_10.tsv $i ${i/_R1.fastq/_R2.fastq} --paired --threads 20 > ${i%_R1.fastq}_100X_READCLASSIFICATION_10.tsv
+ 
+"; } 2>&1 ) 
+
+echo "$time_output" >> $log_file
+
+     # Extract user, system, and elapsed time and maximum memory usage
+    user_time=$(echo "$time_output" | grep "User time (seconds)" | awk '{print $4}')
+    system_time=$(echo "$time_output" | grep "System time (seconds)" | awk '{print $4}')
+    elapsed_time=$(echo "$time_output" | grep "Elapsed (wall clock) time" | awk '{print $8}')
+    max_memory=$(echo "$time_output" | grep "Maximum resident set size (kbytes)" | awk '{print $6}')
+
+    # Convert elapsed time to seconds
+    IFS=: read -r min sec <<< "${elapsed_time}"
+    elapsed_seconds=$(echo "$min * 60 + $sec" | bc)
+
+    # Add to total time and memory usage
+    total_user_time=$(echo "$total_user_time + $user_time" | bc)
+    total_system_time=$(echo "$total_system_time + $system_time" | bc)
+    total_elapsed_time=$(echo "$total_elapsed_time + $elapsed_seconds" | bc)
+    total_max_memory=$(echo "$total_max_memory + $max_memory" | bc)
+done
+
+# Print total time and memory usage
+echo "Total User Time (seconds): $total_user_time" >> $log_file
+echo "Total System Time (seconds): $total_system_time" >> $log_file
+echo "Total Elapsed Time (seconds): $total_elapsed_time" >> $log_file
+echo "Total Maximum Memory (kbytes): $total_max_memory" >> $log_file
