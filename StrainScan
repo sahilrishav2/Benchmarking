@@ -1,0 +1,109 @@
+##Analysis
+
+#!/bin/bash
+
+# Create a log file to store time and memory usage for each file
+log_file="/home/rishabh/StrainScan/resource_usage_real_datasets_medicago2.log"
+
+# Clear the log file if it exists
+> $log_file
+
+# Initialize total time and memory variables
+total_user_time=0
+total_system_time=0
+total_elapsed_time=0
+total_max_memory=0
+
+for i in /home/rishabh/synthetic_data/*_R1.fastq; do
+    echo "Processing file: $i" >> $log_file
+
+    # Measure time and memory usage
+    time_output=$( { /usr/bin/time -v bash -c "
+
+        python StrainScan.py -i $i -j ${i/_R1.fastq/_R2.fastq} -d X.campestris -l 2  -o ${i%_R1.fastq}_X.campestris_real_datasets_medicago2_out
+
+        
+    "; } 2>&1 )
+
+    echo "$time_output" >> $log_file
+
+    # Extract user, system, and elapsed time and maximum memory usage
+    user_time=$(echo "$time_output" | grep "User time (seconds)" | awk '{print $4}')
+    system_time=$(echo "$time_output" | grep "System time (seconds)" | awk '{print $4}')
+    elapsed_time=$(echo "$time_output" | grep "Elapsed (wall clock) time" | awk '{print $8}')
+    max_memory=$(echo "$time_output" | grep "Maximum resident set size (kbytes)" | awk '{print $6}')
+
+    # Convert elapsed time to seconds
+    IFS=: read -r min sec <<< "$elapsed_time"
+    elapsed_seconds=$(echo "$min * 60 + $sec" | bc)
+
+    # Add to total time and memory usage
+    total_user_time=$(echo "$total_user_time + $user_time" | bc)
+    total_system_time=$(echo "$total_system_time + $system_time" | bc)
+    total_elapsed_time=$(echo "$total_elapsed_time + $elapsed_seconds" | bc)
+    total_max_memory=$(echo "$total_max_memory + $max_memory" | bc)
+done
+
+# Print total time and memory usage
+echo "Total User Time (seconds): $total_user_time" >> $log_file
+echo "Total System Time (seconds): $total_system_time" >> $log_file
+echo "Total Elapsed Time (seconds): $total_elapsed_time" >> $log_file
+echo "Total Maximum Memory (kbytes): $total_max_memory" >> $log_file
+(midas2.0) [rishabh@localhost StrainScan]$ cat run_multiple_files.sh
+#!/bin/bash
+
+# Create a log file to store time and memory usage for each file
+log_file="/home/rishabh/StrainScan/resource_usage_100X_500S.log"
+
+# Clear the log file if it exists
+> $log_file
+
+# Initialize total time and memory variables
+total_user_time=0
+total_system_time=0
+total_elapsed_time=0
+total_max_memory=0
+
+for i in /home/rishabh/synthetic_data/*_R1.fastq; do
+    echo "Processing file: $i" >> $log_file
+
+    # Measure time and memory usage
+    time_output=$( { /usr/bin/time -v bash -c "
+
+        python StrainScan.py -i $i -j ${i/_R1.fastq/_R2.fastq} -d E.meliloti -o ${i%_R1.fastq}_E.meliloti_100X_500S_out
+        python StrainScan.py -i $i -j ${i/_R1.fastq/_R2.fastq} -d A.humicireducens_A.fermentarium -o ${i%_R1.fastq}_A.humicireducens_A.fermentarium_100X_500S_out
+        python StrainScan.py -i $i -j ${i/_R1.fastq/_R2.fastq} -d A.radiobacter -o ${i%_R1.fastq}_A.radiobacter_100X_500S_out
+        python StrainScan.py -i $i -j ${i/_R1.fastq/_R2.fastq} -d E.amylovora -o ${i%_R1.fastq}_E.amylovora_100X_500S_out
+        python StrainScan.py -i $i -j ${i/_R1.fastq/_R2.fastq} -d E.medicae -o ${i%_R1.fastq}_E.medicae_100X_500S_out
+        python StrainScan.py -i $i -j ${i/_R1.fastq/_R2.fastq} -d A.tumefaciens -o ${i%_R1.fastq}_A.tumefaciens_100X_500S_out
+        python StrainScan.py -i $i -j ${i/_R1.fastq/_R2.fastq} -d P.syringae -o ${i%_R1.fastq}_P.syringae_100X_500S_out
+        python StrainScan.py -i $i -j ${i/_R1.fastq/_R2.fastq} -d X.campestris -o ${i%_R1.fastq}_X.campestris_100X_500S_out
+        python StrainScan.py -i $i -j ${i/_R1.fastq/_R2.fastq} -d X.fastidiosa -o ${i%_R1.fastq}_X.fastidiosa_100X_500S_out
+        python StrainScan.py -i $i -j ${i/_R1.fastq/_R2.fastq} -d X.oryzae -o ${i%_R1.fastq}_X.oryzae_100X_500S_out
+        
+    "; } 2>&1 )
+
+    echo "$time_output" >> $log_file
+
+    # Extract user, system, and elapsed time and maximum memory usage
+    user_time=$(echo "$time_output" | grep "User time (seconds)" | awk '{print $4}')
+    system_time=$(echo "$time_output" | grep "System time (seconds)" | awk '{print $4}')
+    elapsed_time=$(echo "$time_output" | grep "Elapsed (wall clock) time" | awk '{print $8}')
+    max_memory=$(echo "$time_output" | grep "Maximum resident set size (kbytes)" | awk '{print $6}')
+
+    # Convert elapsed time to seconds
+    IFS=: read -r min sec <<< "$elapsed_time"
+    elapsed_seconds=$(echo "$min * 60 + $sec" | bc)
+
+    # Add to total time and memory usage
+    total_user_time=$(echo "$total_user_time + $user_time" | bc)
+    total_system_time=$(echo "$total_system_time + $system_time" | bc)
+    total_elapsed_time=$(echo "$total_elapsed_time + $elapsed_seconds" | bc)
+    total_max_memory=$(echo "$total_max_memory + $max_memory" | bc)
+done
+
+# Print total time and memory usage
+echo "Total User Time (seconds): $total_user_time" >> $log_file
+echo "Total System Time (seconds): $total_system_time" >> $log_file
+echo "Total Elapsed Time (seconds): $total_elapsed_time" >> $log_file
+echo "Total Maximum Memory (kbytes): $total_max_memory" >> $log_file
