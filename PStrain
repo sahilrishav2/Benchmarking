@@ -1,0 +1,55 @@
+#Analysis
+
+#!/bin/bash
+
+# Find all configuration files matching the pattern config*.txt
+config_files=(synthetic_data_bacteria.txt)
+
+# Create a log file to store time and memory usage for each file
+log_file="/home/user/PStrain/test/resource_usage_synthetic_datasets_bacteria.log"
+
+# Clear the log file if it exists
+> $log_file
+
+# Initialize total time and memory variables
+total_user_time=0
+total_system_time=0
+total_elapsed_time=0
+total_max_memory=0
+
+
+# Loop through each configuration file
+for config in "${config_files[@]}"
+do
+   echo "Processing file: $i" >> $log_file
+
+    # Measure time and memory usage
+    time_output=$( { /usr/bin/time -v bash -c "
+
+    python3 ../scripts/PStrain.py -c "$config" -o "out_${config%.txt}" --bowtie2db ../mpa_vOct22_CHOCOPhlAnSGB_202403/ -x mpa_vOct22_CHOCOPhlAnSGB_202403 --proc 20 --nproc 20
+    "; } 2>&1 )
+
+    echo "$time_output" >> $log_file
+
+     # Extract user, system, and elapsed time and maximum memory usage
+    user_time=$(echo "$time_output" | grep "User time (seconds)" | awk '{print $4}')
+    system_time=$(echo "$time_output" | grep "System time (seconds)" | awk '{print $4}')
+    elapsed_time=$(echo "$time_output" | grep "Elapsed (wall clock) time" | awk '{print $8}')
+    max_memory=$(echo "$time_output" | grep "Maximum resident set size (kbytes)" | awk '{print $6}')
+
+    # Convert elapsed time to seconds
+    IFS=: read -r min sec <<< "${elapsed_time}"
+    elapsed_seconds=$(echo "$min * 60 + $sec" | bc)
+
+    # Add to total time and memory usage
+    total_user_time=$(echo "$total_user_time + $user_time" | bc)
+    total_system_time=$(echo "$total_system_time + $system_time" | bc)
+    total_elapsed_time=$(echo "$total_elapsed_time + $elapsed_seconds" | bc)
+    total_max_memory=$(echo "$total_max_memory + $max_memory" | bc)
+done
+
+# Print total time and memory usage
+echo "Total User Time (seconds): $total_user_time" >> $log_file
+echo "Total System Time (seconds): $total_system_time" >> $log_file
+echo "Total Elapsed Time (seconds): $total_elapsed_time" >> $log_file
+echo "Total Maximum Memory (kbytes): $total_max_memory" >> $log_file
