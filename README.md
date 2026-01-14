@@ -245,3 +245,10 @@ ncbi-genome-download -T #species-taxids  bacteria -F fasta,assembly-report -s ge
 ## Here 'species-taxids' you need to provide species taxomony id of the species whose genome you want to download
 ```
 
+
+## For simulating datasets by giving the number of strains of which you want to generate datasets and at which sequencing depth:
+
+```
+bash Simulation_of_metagenomic_data.sh genome_directories.txt /path/to/output number_of_strains sequencing_depth
+
+```
