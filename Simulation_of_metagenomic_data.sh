@@ -62,7 +62,7 @@ main() {
     CONFIG_FILE="$1"
     OUTPUT_DIR="$2"
     NUM_STRAINS="$3"
-    depth="$4"
+    DEPTH="$4"
     THREADS="${5:-20}"
 
     # Validate inputs
@@ -76,8 +76,8 @@ main() {
         exit 1
     fi
 
-    if [[ ! "$depth" =~ ^(10|50|100)$ ]]; then
-        print_color "31" "Error: depth must be 10, 50, or 100"
+    if [[ ! "$DEPTH" =~ ^(10|50|100)$ ]]; then
+        print_color "31" "Error: Depth must be 10, 50, or 100"
         exit 1
     fi
 
@@ -101,12 +101,12 @@ main() {
     fi
 
     # Create log file
-    LOG_FILE="${OUTPUT_DIR}/simulation_${NUM_STRAINS}_strains_${depth}X.log"
+    LOG_FILE="${OUTPUT_DIR}/simulation_${NUM_STRAINS}_strains_${DEPTH}X.log"
     echo "Metagenome Simulation Log" > "$LOG_FILE"
     echo "==========================" >> "$LOG_FILE"
     echo "Date: $(date)" >> "$LOG_FILE"
     echo "Number of strains: $NUM_STRAINS" >> "$LOG_FILE"
-    echo "depth: ${depth}X" >> "$LOG_FILE"
+    echo "Depth: ${DEPTH}X" >> "$LOG_FILE"
     echo "Threads: $THREADS" >> "$LOG_FILE"
     echo "" >> "$LOG_FILE"
 
@@ -178,11 +178,11 @@ main() {
     # Select genomes for simulation
     print_color "34" "Selecting $NUM_STRAINS genomes for simulation..."
     SELECTED_GENOMES=()
-    SELECTED_MANIFEST="${OUTPUT_DIR}/selected_genomes_${NUM_STRAINS}_strains_${depth}X.txt"
+    SELECTED_MANIFEST="${OUTPUT_DIR}/selected_genomes_${NUM_STRAINS}_strains_${DEPTH}X.txt"
     echo "# Selected Genomes Manifest" > "$SELECTED_MANIFEST"
     echo "# Date: $(date)" >> "$SELECTED_MANIFEST"
     echo "# Number of strains: $NUM_STRAINS" >> "$SELECTED_MANIFEST"
-    echo "# depth: ${depth}X" >> "$SELECTED_MANIFEST"
+    echo "# Depth: ${DEPTH}X" >> "$SELECTED_MANIFEST"
     echo "" >> "$SELECTED_MANIFEST"
     echo "Filepath\tSpecies" >> "$SELECTED_MANIFEST"
 
@@ -273,7 +273,7 @@ main() {
     print_color "32" "Successfully selected ${#SELECTED_GENOMES[@]} genomes"
 
     # Calculate number of reads based on depth and number of strains
-    print_color "34" "Calculating number of reads for ${depth}X depth..."
+    print_color "34" "Calculating number of reads for ${DEPTH}X depth..."
     
     # Define reads per strain based on depth
     declare -A READS_PER_STRAIN=(
@@ -282,7 +282,7 @@ main() {
         ["100"]=3600000 # 3.6M per strain
     )
     
-    READS_PER_STRAIN=${READS_PER_STRAIN[$depth]}
+    READS_PER_STRAIN=${READS_PER_STRAIN[$DEPTH]}
     TOTAL_READS=$(( NUM_STRAINS * READS_PER_STRAIN ))
     
     # Format for human readability
@@ -310,7 +310,7 @@ main() {
     find "$TEMP_DIR" -type l -name "*.fna" -o -name "*.fa" -o -name "*.fasta" -o -name "*.fna.gz" -o -name "*.fa.gz" -o -name "*.fasta.gz" | sort > "$GENOME_LIST_FILE"
 
     # Generate output filename
-    OUTPUT_PREFIX="${OUTPUT_DIR}/synthetic_reads_${NUM_STRAINS}_strains_${depth}X"
+    OUTPUT_PREFIX="${OUTPUT_DIR}/synthetic_reads_${NUM_STRAINS}_strains_${DEPTH}X"
 
     # Run InSilicoSeq
     print_color "34" "Starting InSilicoSeq simulation..."
@@ -357,14 +357,14 @@ main() {
     rm -rf "$TEMP_DIR"
 
     # Create summary file
-    SUMMARY_FILE="${OUTPUT_DIR}/simulation_summary_${NUM_STRAINS}_strains_${depth}X.txt"
+    SUMMARY_FILE="${OUTPUT_DIR}/simulation_summary_${NUM_STRAINS}_strains_${DEPTH}X.txt"
     cat > "$SUMMARY_FILE" << EOF
 Metagenome Simulation Summary
 =============================
 Date: $(date)
 Number of strains requested: $NUM_STRAINS
 Number of strains selected: ${#SELECTED_GENOMES[@]}
-depth: ${depth}X
+Depth: ${DEPTH}X
 Total reads generated: $TOTAL_READS ($TOTAL_READS_READABLE)
 Threads used: $THREADS
 
