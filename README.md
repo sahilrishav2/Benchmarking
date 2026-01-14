@@ -237,3 +237,11 @@ bash StrainEst.sh /path/to/fastq_files /path/to/processing.log list.txt /path/to
 # provide full path to processing.log where you want to store tool's running details
 # Path to reference to provide path to bowtie2 indexes and SNP files
 ```
+
+
+## For downloading the bacterial sequences, we can use ncbi-genome-download:
+```
+ncbi-genome-download -T #species-taxids  bacteria -F fasta,assembly-report -s genbank -p 20
+## Here 'species-taxids' you need to provide species taxomony id of the species whose genome you want to download
+```
+
