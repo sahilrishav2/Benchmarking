@@ -15,7 +15,7 @@ The findings revealed that few tools are good for targeted strain identification
 - **Memory**: Minimum 16GB RAM (32GB+ recommended for large datasets)
 - **Storage**: Sufficient space for databases and output files
 
-## Common Dependencies
+## Common dependencies
 
 ```
 conda (https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html)
@@ -23,7 +23,7 @@ ncbi-genome-download (https://github.com/kblin/ncbi-genome-download)
 InSilicoSeq (https://insilicoseq.readthedocs.io/en/latest/)
 ```
 
-## Tools Installation and Processing:
+## Tools installation and processing:
 
 ##### StrainScan
 Install StrainScan using conda
