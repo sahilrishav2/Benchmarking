@@ -39,7 +39,7 @@ bash StrainScan.sh /path/to/fastq_files /path/to/processing.log list.txt
 
 # where list.txt contains database full path like this:
 /full_path/E.meliloti
-/full_path/A.humicireducens_A.fermentarium 
+/full_path/A.humicireducens 
 
 # provide full path to processing.log where you want to store tool's running details
 ```
@@ -82,7 +82,7 @@ bash StrainGE.sh /path/to/fastq_files /path/to/processing.log list.txt
 
 # where list.txt contains database full path like this:
 /full_path/E.meliloti
-/full_path/A.humicireducens_A.fermentarium 
+/full_path/A.humicireducens
 
 # provide full path to processing.log where you want to store tool's running details
 ```
@@ -216,10 +216,10 @@ bash StrainEst.sh /path/to/fastq_files /path/to/processing.log list.txt /path/to
 
 # where list.txt contains database full path like this:
 /full_path/E.meliloti
-/full_path/A.humicireducens_A.fermentarium 
+/full_path/A.humicireducens 
 
 # provide full path to processing.log where you want to store tool's running details
-# Path to reference to provide path to bowtie2 indexes and SNP files
+# "Path to reference" provides path to bowtie2 indexes and SNP files
 ```
 
 
@@ -227,6 +227,21 @@ bash StrainEst.sh /path/to/fastq_files /path/to/processing.log list.txt /path/to
 ```
 ncbi-genome-download -T #species-taxids  bacteria -F fasta,assembly-report -s genbank -p 20
 ## Here 'species-taxids' you need to provide species taxomony id of the species whose genome you want to download
+
+## Species                       taxids
+   Dyella japonica               1440762
+   Azospirillum humicireducens   1226968
+   Agrobacterium tumefaciens     358
+   Agrobacterium radiobacter     362
+   Erwinia amylovora             552
+   Ensifer medicae               110321
+   Ensifer meliloti              382
+   Pseudomonas fluorescens       294
+   Pseudomonas syringae          317
+   Xanthomonas campestris        359385
+   Xanthomonas oryzae            129394
+   Xylella fastidiosa            2371
+
 ```
 
 
@@ -234,5 +249,9 @@ ncbi-genome-download -T #species-taxids  bacteria -F fasta,assembly-report -s ge
 
 ```
 bash Simulation_of_metagenomic_data.sh genome_directories.txt /path/to/output number_of_strains sequencing_depth
+
+## genome_directories.txt file contains full path to bacterial genomes where genomes in fasta file would be available:
+/full_path/E.meliloti
+/full_path/A.humicireducens
 
 ```
