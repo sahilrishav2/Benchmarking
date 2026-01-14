@@ -15,35 +15,19 @@ The findings revealed that few tools are good for targeted strain identification
 - **Memory**: Minimum 16GB RAM (32GB+ recommended for large datasets)
 - **Storage**: Sufficient space for databases and output files
 
-## Python Dependencies (Common)
+## Common Dependencies
 
 ```
-pip3 install biopython==1.81
-pip3 install click==8.1.7
-pip3 install Jinja2==3.1.2
-pip3 install matplotlib==3.8.2
-pip3 install numpy==1.26.2
-pip3 install pandas==2.1.3
-pip3 install PyYAML==6.0.1
-pip3 install requests==2.31.0
-pip3 install rich==13.7.0
-pip3 install seaborn==0.13.0
-pip3 install scikit-learn==1.3.2
-pip3 install snakemake==7.32.4
-pip3 install pulp==2.7.0
-pip3 install h5py==3.10.0
-pip3 install tables==3.8.0
+conda (https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html)
+ncbi-genome-download (https://github.com/kblin/ncbi-genome-download)
+InSilicoSeq (https://insilicoseq.readthedocs.io/en/latest/)
 ```
 
 ## Tools Installation and Processing:
 
 ##### StrainScan
 Install StrainScan using conda
-`conda install -c bioconda strainscan`
-
-###### Additional dependencies required to install:
-1. Bowtie2
-2. Samtools
+`conda install -c bioconda strainscan bowtie2 samtools`
 
 ###### Database customization:
 `python StrainScan_build.py -i Bacterial_genomes_directory -o bacterial_database`
