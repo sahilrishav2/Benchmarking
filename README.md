@@ -23,6 +23,41 @@ ncbi-genome-download (https://github.com/kblin/ncbi-genome-download)
 InSilicoSeq (https://insilicoseq.readthedocs.io/en/latest/)
 ```
 
+
+## For downloading the bacterial sequences, we can use ncbi-genome-download:
+```
+ncbi-genome-download -T #species-taxids  bacteria -F fasta,assembly-report -s genbank -p 20
+## Here 'species-taxids' you need to provide species taxomony id of the species whose genome you want to download
+
+##   Species                       taxids
+##   Dyella japonica               1440762
+##   Azospirillum humicireducens   1226968
+##   Agrobacterium tumefaciens     358
+##   Agrobacterium radiobacter     362
+##   Erwinia amylovora             552
+##   Ensifer medicae               110321
+##   Ensifer meliloti              382
+##   Pseudomonas fluorescens       294
+##   Pseudomonas syringae          317
+##   Xanthomonas campestris        359385
+##   Xanthomonas oryzae            129394
+##   Xylella fastidiosa            2371
+
+```
+
+
+## For simulating datasets by giving the number of strains of which you want to generate datasets and at which sequencing depth:
+
+```
+bash Simulation_of_metagenomic_data.sh genome_directories.txt /path/to/output number_of_strains sequencing_depth
+
+## genome_directories.txt file contains full path to bacterial genomes where genomes in fasta file would be available:
+##/full_path/E.meliloti
+##/full_path/A.humicireducens
+
+```
+
+
 ## Tools installation and processing:
 
 ##### StrainScan
@@ -220,40 +255,6 @@ bash StrainEst.sh /path/to/fastq_files /path/to/processing.log list.txt /path/to
 
 # provide full path to processing.log where you want to store tool's running details
 # "Path to reference" provides path to bowtie2 indexes and SNP files
-```
-
-
-## For downloading the bacterial sequences, we can use ncbi-genome-download:
-```
-ncbi-genome-download -T #species-taxids  bacteria -F fasta,assembly-report -s genbank -p 20
-## Here 'species-taxids' you need to provide species taxomony id of the species whose genome you want to download
-
-##   Species                       taxids
-##   Dyella japonica               1440762
-##   Azospirillum humicireducens   1226968
-##   Agrobacterium tumefaciens     358
-##   Agrobacterium radiobacter     362
-##   Erwinia amylovora             552
-##   Ensifer medicae               110321
-##   Ensifer meliloti              382
-##   Pseudomonas fluorescens       294
-##   Pseudomonas syringae          317
-##   Xanthomonas campestris        359385
-##   Xanthomonas oryzae            129394
-##   Xylella fastidiosa            2371
-
-```
-
-
-## For simulating datasets by giving the number of strains of which you want to generate datasets and at which sequencing depth:
-
-```
-bash Simulation_of_metagenomic_data.sh genome_directories.txt /path/to/output number_of_strains sequencing_depth
-
-## genome_directories.txt file contains full path to bacterial genomes where genomes in fasta file would be available:
-##/full_path/E.meliloti
-##/full_path/A.humicireducens
-
 ```
 
 
