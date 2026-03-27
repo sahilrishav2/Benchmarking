@@ -255,3 +255,29 @@ bash Simulation_of_metagenomic_data.sh genome_directories.txt /path/to/output nu
 ##/full_path/A.humicireducens
 
 ```
+
+
+## For calculating F1 scores:
+
+```
+Rscript F1_scores.R #Total strains #Identified strains #Correct identifications
+```
+Example usage
+```
+Rscript F1_scores.R 18 10 8
+```
+It will give output like this
+```
+Performance Metrics:
+=====================
+Total strains            : 18
+Identified strains       : 10
+Correct identifications  : 8
+True Positives (TP)      : 8
+False Positives (FP)     : 2
+False Negatives (FN)     : 10
+Precision                : 0.8000
+Recall                   : 0.4444
+F1 Score                 : 0.5714
+```
+
