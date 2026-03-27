@@ -18,9 +18,9 @@ The findings revealed that few tools are good for targeted strain identification
 ## Common dependencies
 
 ```
-conda (https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html)
-ncbi-genome-download (https://github.com/kblin/ncbi-genome-download)
-InSilicoSeq (https://insilicoseq.readthedocs.io/en/latest/)
+- conda (https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html)
+- ncbi-genome-download (https://github.com/kblin/ncbi-genome-download)
+- InSilicoSeq (https://insilicoseq.readthedocs.io/en/latest/)
 ```
 
 
